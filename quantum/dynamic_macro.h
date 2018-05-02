@@ -19,6 +19,7 @@
 #define DYNAMIC_MACROS_H
 
 #include "action_layer.h"
+#include "pro_micro.h"
 
 #ifndef DYNAMIC_MACRO_SIZE
 /* May be overridden with a custom value. Be aware that the effective
@@ -76,6 +77,7 @@ void dynamic_macro_record_start(
     dprintln("dynamic macro recording: started");
 
     dynamic_macro_led_blink();
+    RXLED1;
 
     clear_keyboard();
     layer_clear();
@@ -159,6 +161,7 @@ void dynamic_macro_record_end(
     keyrecord_t **macro_end)
 {
     dynamic_macro_led_blink();
+    RXLED0;
 
     /* Do not save the keys being held when stopping the recording,
      * i.e. the keys used to access the layer DYN_REC_STOP is on.
