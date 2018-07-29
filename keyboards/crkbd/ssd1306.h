@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "pincontrol.h"
-#include "config.h"
 
 enum ssd1306_cmds {
   DisplayOff = 0xAE,
@@ -56,15 +55,21 @@ enum ssd1306_cmds {
 #define DisplayWidth 128
 
 #define FontHeight 8
-#define FontWidth 6
+#define FontWidth 8
 
-#define MatrixRows (DisplayHeight / FontHeight)
-#define MatrixCols (DisplayWidth / FontWidth)
+#define MatrixRows (DisplayHeight / FontWidth)
+#define MatrixCols (DisplayWidth / FontHeight)
+
+#define MateriaShellStartCol 10
+#define MateriaShellStartLine (MateriaShellStartCol * FontHeight)
+#define MateriaScriptLen (MateriaShellStartCol * FontWidth)
+#define MateriaShellLen ((MatrixCols - MateriaShellStartCol) * FontWidth)
 
 struct CharacterMatrix {
-  uint8_t display[MatrixRows][MatrixCols];
+  uint8_t display[MatrixCols][MatrixRows];
   uint8_t *cursor;
   bool dirty;
+  const unsigned char *shell;
 };
 
 struct CharacterMatrix display;
@@ -85,7 +90,6 @@ void matrix_clear(struct CharacterMatrix *matrix);
 void matrix_write_char_inner(struct CharacterMatrix *matrix, uint8_t c);
 void matrix_write_char(struct CharacterMatrix *matrix, uint8_t c);
 void matrix_write(struct CharacterMatrix *matrix, const char *data);
-void matrix_write_ln(struct CharacterMatrix *matrix, const char *data);
 void matrix_write_P(struct CharacterMatrix *matrix, const char *data);
 void matrix_render(struct CharacterMatrix *matrix);
 

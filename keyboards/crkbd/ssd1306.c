@@ -1,10 +1,9 @@
-#ifdef SSD1306OLED
-
 #include "ssd1306.h"
 #include "i2c.h"
 #include <string.h>
 #include "print.h"
 #include "glcdfont.c"
+#include "materiafont.h"
 #ifdef ADAFRUIT_BLE_ENABLE
 #include "adafruit_ble.h"
 #endif
@@ -95,9 +94,9 @@ static void clear_display(void) {
     // Data mode
     goto done;
   }
-  for (uint8_t row = 0; row < MatrixRows; ++row) {
-    for (uint8_t col = 0; col < DisplayWidth; ++col) {
-      i2c_master_write(0);
+  for (uint8_t col = 0; col < DisplayWidth; ++col) {
+    for (uint8_t row = 0; row < MatrixRows; ++row) {
+      i2c_master_write(0x0F);
     }
   }
 
@@ -123,6 +122,7 @@ static int8_t capture_sendchar(uint8_t c) {
 bool iota_gfx_init(bool rotate) {
   bool success = false;
 
+  i2c_master_init();
   send_cmd1(DisplayOff);
   send_cmd2(SetDisplayClockDiv, 0x80);
   send_cmd2(SetMultiPlex, DisplayHeight - 1);
@@ -132,16 +132,16 @@ bool iota_gfx_init(bool rotate) {
 
   send_cmd1(SetStartLine | 0x0);
   send_cmd2(SetChargePump, 0x14 /* Enable */);
-  send_cmd2(SetMemoryMode, 0 /* horizontal addressing */);
+  send_cmd2(SetMemoryMode, 1 /* vertical addressing */);
 
   if(rotate){
     // the following Flip the display orientation 180 degrees
     send_cmd1(SegRemap);
-    send_cmd1(ComScanInc);
+    send_cmd1(ComScanDec);
   }else{
     // Flips the display orientation 0 degrees
     send_cmd1(SegRemap | 0x1);
-    send_cmd1(ComScanDec);
+    send_cmd1(ComScanInc);
   }
 
   send_cmd2(SetComPins, 0x2);
@@ -192,30 +192,10 @@ done:
 void matrix_write_char_inner(struct CharacterMatrix *matrix, uint8_t c) {
   *matrix->cursor = c;
   ++matrix->cursor;
-
-  if (matrix->cursor - &matrix->display[0][0] == sizeof(matrix->display)) {
-    // We went off the end; scroll the display upwards by one line
-    memmove(&matrix->display[0], &matrix->display[1],
-            MatrixCols * (MatrixRows - 1));
-    matrix->cursor = &matrix->display[MatrixRows - 1][0];
-    memset(matrix->cursor, ' ', MatrixCols);
-  }
 }
 
 void matrix_write_char(struct CharacterMatrix *matrix, uint8_t c) {
   matrix->dirty = true;
-
-  if (c == '\n') {
-    // Clear to end of line from the cursor and then move to the
-    // start of the next line
-    uint8_t cursor_col = (matrix->cursor - &matrix->display[0][0]) % MatrixCols;
-
-    while (cursor_col++ < MatrixCols) {
-      matrix_write_char_inner(matrix, ' ');
-    }
-    return;
-  }
-
   matrix_write_char_inner(matrix, c);
 }
 
@@ -224,17 +204,11 @@ void iota_gfx_write_char(uint8_t c) {
 }
 
 void matrix_write(struct CharacterMatrix *matrix, const char *data) {
-  const char *end = data + strlen(data);
+  const char *end = data + MateriaScriptLen + MateriaShellLen;
   while (data < end) {
     matrix_write_char(matrix, *data);
     ++data;
   }
-}
-
-void matrix_write_ln(struct CharacterMatrix *matrix, const char *data) {
-  char data_ln[strlen(data)+2];
-  snprintf(data_ln, sizeof(data_ln), "%s\n", data);
-  matrix_write(matrix, data_ln);
 }
 
 void iota_gfx_write(const char *data) {
@@ -257,7 +231,7 @@ void iota_gfx_write_P(const char *data) {
 }
 
 void matrix_clear(struct CharacterMatrix *matrix) {
-  memset(matrix->display, ' ', sizeof(matrix->display));
+  memset(matrix->display, 0x0, sizeof(matrix->display));
   matrix->cursor = &matrix->display[0][0];
   matrix->dirty = true;
 }
@@ -275,7 +249,7 @@ void matrix_render(struct CharacterMatrix *matrix) {
 
   // Move to the home position
   send_cmd3(PageAddr, 0, MatrixRows - 1);
-  send_cmd3(ColumnAddr, 0, (MatrixCols * FontWidth) - 1);
+  send_cmd3(ColumnAddr, 0, (MatrixCols * FontHeight) - 1);
 
   if (i2c_start_write(SSD1306_ADDRESS)) {
     goto done;
@@ -285,17 +259,18 @@ void matrix_render(struct CharacterMatrix *matrix) {
     goto done;
   }
 
-  for (uint8_t row = 0; row < MatrixRows; ++row) {
-    for (uint8_t col = 0; col < MatrixCols; ++col) {
-      const uint8_t *glyph = font + (matrix->display[row][col] * FontWidth);
-
-      for (uint8_t glyphCol = 0; glyphCol < FontWidth; ++glyphCol) {
-        uint8_t colBits = pgm_read_byte(glyph + glyphCol);
-        i2c_master_write(colBits);
-      }
-
-      // 1 column of space between chars (it's not included in the glyph)
-      //i2c_master_write(0);
+  for (uint8_t col = 0; col < DisplayWidth; ++col) {
+    const uint8_t *font;
+    if (col < MateriaShellStartLine) {
+      font = font_script;
+    } else {
+      font = display.shell;
+    }
+    for (uint8_t row = 0; row < MatrixRows; ++row) {
+      const uint8_t *glyph = font + (matrix->display[col/FontHeight][row] * FontWidth);
+      uint8_t glyphCol = col % FontHeight;
+      uint8_t colBits = pgm_read_byte(glyph + glyphCol);
+      i2c_master_write(colBits);
     }
   }
 
@@ -327,4 +302,3 @@ void iota_gfx_task(void) {
     iota_gfx_off();
   }
 }
-#endif
