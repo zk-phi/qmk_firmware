@@ -33,6 +33,9 @@ extern uint8_t is_master;
 #ifdef SSD1306OLED
 #include "./oled.c"
 #endif
+#ifdef CRPTR
+#include "./pointer.c"
+#endif
 
 /* KEYCODE DEFINITIONS */
 
@@ -198,12 +201,18 @@ void rgblight_task_user (void) {
 }
 
 void matrix_init_user(void) {
+  #ifdef CRPTR
+    if (is_master) pointer_init();
+  #endif
   #ifdef SSD1306OLED
     oled_init();
   #endif
 }
 
 void matrix_scan_user(void) {
+  #ifdef CRPTR
+    if (is_master) pointer_task();
+  #endif
   #ifdef SSD1306OLED
     oled_update();
   #endif
