@@ -25,13 +25,12 @@ crptr_t crptr_read (void) {
 
         i2c_master_stop();
 
-        /* uint8 000000xx, uint8 yyyyyyyy
-           => uint8 xxyyyyyyyy
-           => int16 00000000xxyyyyyyyy
+        /*
+           The pointer device sends a 10-bit unsigned integer (0 - 1023) in two bytes.
+           Make it 8-bit signed integer (-128 - 128).
         */
-        res.x = (int16_t)((bytes[0] << 6) | (bytes[1] >> 2)) - 128;
-        res.y = (int16_t)((bytes[2] << 6) | (bytes[3] >> 2)) - 128;
-
+        res.x = (int)(((uint16_t*)bytes)[0] >> 2) - 128;
+        res.y = (int)(((uint16_t*)bytes)[1] >> 2) - 128;
 
         if (!carib_completed) {
             center.x = res.x;
