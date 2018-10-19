@@ -11,6 +11,11 @@
 #define SCREEN_FRAME_INTERVAL 55 /* 18fps */
 #define ANIMATION_ENABLE
 
+#ifdef CRPTR_DEBUG_MODE
+char *get_layer_name(void) {
+  return crptr_status;
+}
+#else
 char *get_layer_name(void) {
   if (layer_state & L_WHEEL) {
     return "Mouse-Wheel";
@@ -30,6 +35,7 @@ char *get_layer_name(void) {
     return "Base";
   }
 }
+#endif
 
 int keyfreq_count = 0;
 int last_keyfreq_update = 0;

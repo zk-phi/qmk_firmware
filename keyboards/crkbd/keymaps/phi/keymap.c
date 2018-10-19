@@ -30,11 +30,11 @@ extern uint8_t is_master;
 #ifdef TAP_DANCE_ENABLE
 #include "dance.c"
 #endif
-#ifdef SSD1306OLED
-#include "./oled.c"
-#endif
 #ifdef CRPTR
 #include "./pointer.c"
+#endif
+#ifdef SSD1306OLED
+#include "./oled.c"
 #endif
 
 /* KEYCODE DEFINITIONS */
