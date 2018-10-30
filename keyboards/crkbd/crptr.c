@@ -18,10 +18,10 @@ crptr_t crptr_read (void) {
         res.x = 0;
         res.y = 0;
     } else {
-        bytes[0] = i2c_master_read(0);
-        bytes[1] = i2c_master_read(0);
-        bytes[2] = i2c_master_read(0);
-        bytes[3] = i2c_master_read(1);
+        bytes[0] = i2c_master_read(1);
+        bytes[1] = i2c_master_read(1);
+        bytes[2] = i2c_master_read(1);
+        bytes[3] = i2c_master_read(0);
 
         i2c_master_stop();
 
