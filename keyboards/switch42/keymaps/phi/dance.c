@@ -118,10 +118,11 @@ void garake0_finished (qk_tap_dance_state_t *state, void *user_data) {
     garake0_raised = true;
     return;
   }
-  switch (state->count % 4) {
-   case 1: send_keycode(KC_DOT); break;
-   case 2: send_keycode(KC_COMM); break;
-   case 3: register_code(KC_LSFT); send_keycode(KC_1); unregister_code(KC_LSFT); break; /* ! */
+  switch (state->count % 5) {
+   case 1: send_keycode(KC_ENT); break;
+   case 2: send_keycode(KC_DOT); break;
+   case 3: send_keycode(KC_COMM); break;
+   case 4: register_code(KC_LSFT); send_keycode(KC_1); unregister_code(KC_LSFT); break; /* ! */
    case 0: register_code(KC_LSFT); send_keycode(KC_SLSH); unregister_code(KC_LSFT); break; /* ? */
    default: break;
   }
