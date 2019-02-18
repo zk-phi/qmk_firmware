@@ -37,15 +37,15 @@ extern uint8_t is_master;
 #define KC_XXXX KC_NO
 
 #define KC_D_MOUS  LT(MOUSE, KC_D)
-#define KC_L1_RAI  LT(RAISE, KC_LANG1)
-#define KC_ESC_FN  LT(FUNCTION, KC_ESC)
-#define KC_L2_ALT  LALT_T(KC_LANG2)
 #define KC_WEEL    MO(WHEEL)
+#define KC_FUNC    MO(FUNCTION)
 #define KC_BASE    TO(BASE)
 #define KC_GARAKE  TG(GARAKE)
 #define KC_TENKEY  TG(TENKEY)
 #define KC_ALT_EN  LALT_T(KC_ENT)
+#define KC_ALT_ES  LALT_T(KC_ESC)
 #define KC_CTL_TB  LCTL_T(KC_TAB)
+#define KC_RAI_EN  LT(RAISE, KC_ENT)
 
 #ifdef TAP_DANCE_ENABLE
 #define KC_GK1     TD(TD_GARAKE1)
@@ -97,7 +97,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //|------+------+------+------+------+------| |------+------+------+------+------+------|
     LSFT , Z    , X    , C    , V    , B    ,   B    , N    , M    , COMM , DOT  , SLSH , \
 //`------+------+------+------+------+------| |------+------+------+------+------+------'
-                        L2_ALT, SPC  ,ESC_FN,   TAB  , ENT  ,L1_RAI \
+                         XXXX ,ALT_ES, SPC  ,   TAB  ,RAI_EN, XXXX  \
 //                     `--------------------' `--------------------'
 ),
 
@@ -105,11 +105,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //,-----------------------------------------. ,-----------------------------------------.
     BSPC , 1    , 2    , 3    , 4    , 5    ,   6    , 7    , 8    , 9    , 0    , EQL  , \
 //|------+------+------+------+------+------| |------+------+------+------+------+------|
-    ____ , ____ , BSLS , LCBR , LPRN , LBRC ,   RBRC , RPRN , RCBR , PIPE , UP   , PLUS , \
+    FUNC , ____ , BSLS , LCBR , LPRN , LBRC ,   RBRC , RPRN , RCBR , PIPE , UP   , PLUS , \
 //|------+------+------+------+------+------| |------+------+------+------+------+------|
-    ____ , EXLM , AT   , HASH , DLR  , PERC ,   CIRC , AMPR , ASTR , LEFT , DOWN , RGHT , \
+    RST  , EXLM , AT   , HASH , DLR  , PERC ,   CIRC , AMPR , ASTR , LEFT , DOWN , RGHT , \
 //`------+------+------+------+------+------| |------+------+------+------+------+------'
-                         ____ , ____ , RST  ,  GARAKE, ____ , ____  \
+                         ____ , LANG2, LANG1,  GARAKE, ____ , ____  \
 //                     `--------------------' `--------------------'
 ),
 
