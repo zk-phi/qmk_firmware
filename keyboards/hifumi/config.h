@@ -51,7 +51,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* ws2812 RGB LED */
 #define RGB_DI_PIN D3
 #define RGBLED_NUM 6
-#define RGBLIGHT_LIMIT_VAL 120
+#define RGBLIGHT_LIMIT_VAL 250
+#define RGBLIGHT_ANIMATIONS
+#define BACKLIGHT_LEVELS 5
+#define RGBLIGHT_EFFECT_SNAKE_LENGTH 2
+
 
 #if defined(RGBLIGHT_ENABLE) && !defined(IOS_DEVICE_ENABLE)
 // USB_MAX_POWER_CONSUMPTION value
