@@ -20,12 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config_common.h"
 
 /* USB Device descriptor parameter */
-#define VENDOR_ID       0xBC42
-#define PRODUCT_ID      0x0002
+#define VENDOR_ID       0xFEED
+#define PRODUCT_ID      0x3060
 #define DEVICE_VER      0x0001
 #define MANUFACTURER    riconken
 #define PRODUCT         hifumi
-#define DESCRIPTION     a macropad with 6 keys
+#define DESCRIPTION     A macropad with 6 keys
 
 /* key matrix size */
 #define MATRIX_ROWS 2
@@ -51,20 +51,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* ws2812 RGB LED */
 #define RGB_DI_PIN D3
 #define RGBLED_NUM 6
-#define RGBLIGHT_LIMIT_VAL 250
+#define RGBLIGHT_LIMIT_VAL 255
+#define RGBLIGHT_HUE_STEP 5
 #define RGBLIGHT_ANIMATIONS
-#define BACKLIGHT_LEVELS 5
-#define RGBLIGHT_EFFECT_SNAKE_LENGTH 2
-
-
-#if defined(RGBLIGHT_ENABLE) && !defined(IOS_DEVICE_ENABLE)
-// USB_MAX_POWER_CONSUMPTION value
-//  120  RGBoff
-//  330  RGB 6
-//  300  RGB 32
-#define USB_MAX_POWER_CONSUMPTION 400
-#else
-// fix iPhone and iPad power adapter issue
-// iOS device need lessthan 100
-#define USB_MAX_POWER_CONSUMPTION 100
-#endif

@@ -15,9 +15,33 @@
  */
 #include "hifumi.h"
 
+#ifdef RGBLIGHT_ENABLE
+//Following line allows macro to read current RGB settings
+extern rgblight_config_t rgblight_config;
+#endif
+
+enum layers {
+  DEFAULT,
+  RAISE,
+  LOWER,
+  ADJUST
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [0] = LAYOUT( /* Base */
-      KC_1, RGB_MODE_RGBTEST, RGB_MODE_RAINBOW,
-      KC_4, RGB_TOG, RGB_MODE_SNAKE
+    [DEFAULT] = LAYOUT(
+      LT(RAISE, KC_F5), KC_UP,   LT(LOWER, KC_PSCR),
+      KC_LEFT,          KC_DOWN, KC_RIGHT
     ),
+    [RAISE] = LAYOUT(
+      _______, KC_PGUP, MO(ADJUST),
+      KC_HOME, KC_PGDN, KC_END
+    ),
+    [LOWER] = LAYOUT(
+      MO(ADJUST), _______, _______,
+      _______,    _______, _______
+    ),
+    [ADJUST] = LAYOUT(
+      _______,        RGB_TOG,        _______,
+      RGB_MODE_SNAKE, RGB_MODE_PLAIN, RGB_HUI
+    )
 };
