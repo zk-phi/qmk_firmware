@@ -16,23 +16,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef MOUSEKEY_H
-#define  MOUSEKEY_H
+#define MOUSEKEY_H
+#endif
 
 #include <stdbool.h>
 #include "host.h"
 
+#ifndef MK_3_SPEED
 
 /* max value on report descriptor */
 #ifndef MOUSEKEY_MOVE_MAX
-    #define MOUSEKEY_MOVE_MAX       127
+  #define MOUSEKEY_MOVE_MAX       127
 #elif MOUSEKEY_MOVE_MAX > 127
-    #error MOUSEKEY_MOVE_MAX needs to be smaller than 127
+  #error MOUSEKEY_MOVE_MAX needs to be smaller than 127
 #endif
 
 #ifndef MOUSEKEY_WHEEL_MAX
-    #define MOUSEKEY_WHEEL_MAX      127
+  #define MOUSEKEY_WHEEL_MAX      127
 #elif MOUSEKEY_WHEEL_MAX > 127
-    #error MOUSEKEY_WHEEL_MAX needs to be smaller than 127
+  #error MOUSEKEY_WHEEL_MAX needs to be smaller than 127
 #endif
 
 #ifndef MOUSEKEY_MOVE_DELTA
@@ -44,14 +46,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MOUSEKEY_DELAY
 #define MOUSEKEY_DELAY 300
 #endif
-#ifndef MOUSEKEY_WHEEL_DELAY
-#define MOUSEKEY_WHEEL_DELAY 300
-#endif
 #ifndef MOUSEKEY_INTERVAL
 #define MOUSEKEY_INTERVAL 50
-#endif
-#ifndef MOUSEKEY_WHEEL_INTERVAL
-#define MOUSEKEY_WHEEL_INTERVAL 50
 #endif
 #ifndef MOUSEKEY_MAX_SPEED
 #define MOUSEKEY_MAX_SPEED 10
@@ -66,25 +62,59 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MOUSEKEY_WHEEL_TIME_TO_MAX 40
 #endif
 
-#ifndef MOUSEKEY_ACCEL0_SPEED
-#define MOUSEKEY_ACCEL0_SPEED 4
+#else /* #ifndef MK_3_SPEED */
+
+#ifndef MK_C_OFFSET_UNMOD
+#define MK_C_OFFSET_UNMOD 16
 #endif
-#ifndef MOUSEKEY_ACCEL1_SPEED
-#define MOUSEKEY_ACCEL1_SPEED 2
+#ifndef MK_C_INTERVAL_UNMOD
+#define MK_C_INTERVAL_UNMOD 16
 #endif
-#ifndef MOUSEKEY_ACCEL2_SPEED
-#define MOUSEKEY_ACCEL2_SPEED 1
+#ifndef MK_C_OFFSET_0
+#define MK_C_OFFSET_0 1
+#endif
+#ifndef MK_C_INTERVAL_0
+#define MK_C_INTERVAL_0 32
+#endif
+#ifndef MK_C_OFFSET_1
+#define MK_C_OFFSET_1 4
+#endif
+#ifndef MK_C_INTERVAL_1
+#define MK_C_INTERVAL_1 16
+#endif
+#ifndef MK_C_OFFSET_2
+#define MK_C_OFFSET_2 32
+#endif
+#ifndef MK_C_INTERVAL_2
+#define MK_C_INTERVAL_2 16
 #endif
 
-#ifndef MOUSEKEY_ACCEL0_WHEEL_SPEED
-#define MOUSEKEY_ACCEL0_WHEEL_SPEED 4
+#ifndef MK_W_OFFSET_UNMOD
+#define MK_W_OFFSET_UNMOD 1
 #endif
-#ifndef MOUSEKEY_ACCEL1_WHEEL_SPEED
-#define MOUSEKEY_ACCEL1_WHEEL_SPEED 2
+#ifndef MK_W_INTERVAL_UNMOD
+#define MK_W_INTERVAL_UNMOD 40
 #endif
-#ifndef MOUSEKEY_ACCEL2_WHEEL_SPEED
-#define MOUSEKEY_ACCEL2_WHEEL_SPEED 1
+#ifndef MK_W_OFFSET_0
+#define MK_W_OFFSET_0 1
 #endif
+#ifndef MK_W_INTERVAL_0
+#define MK_W_INTERVAL_0 360
+#endif
+#ifndef MK_W_OFFSET_1
+#define MK_W_OFFSET_1 1
+#endif
+#ifndef MK_W_INTERVAL_1
+#define MK_W_INTERVAL_1 120
+#endif
+#ifndef MK_W_OFFSET_2
+#define MK_W_OFFSET_2 1
+#endif
+#ifndef MK_W_INTERVAL_2
+#define MK_W_INTERVAL_2 20
+#endif
+
+#endif /* #ifndef MK_3_SPEED */
 
 #ifdef __cplusplus
 extern "C" {
@@ -97,7 +127,6 @@ extern uint8_t mk_time_to_max;
 extern uint8_t mk_wheel_max_speed;
 extern uint8_t mk_wheel_time_to_max;
 
-
 void mousekey_task(void);
 void mousekey_on(uint8_t code);
 void mousekey_off(uint8_t code);
@@ -106,6 +135,4 @@ void mousekey_send(void);
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif
