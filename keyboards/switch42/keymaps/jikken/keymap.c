@@ -191,19 +191,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* USER TASKS */
 
 #define AUDIO_INPUT 8
-#define AMP 1
+#define AMP 1                   /* MAKE THIS COFIGURABLE */
 
-#define POWER_OFF_DELAY 200 /* old value: 50 */
+#define POWER_OFF_DELAY 250 /* old value: 50 */
 #define POWER_ON_DELAY  50
 #define POWER_THRESHOLD 5
 
 /* KICK LED */
 #define KICK_BAND_FROM      1
 #define KICK_BAND_TO        1
-#define KICK_WINDOW_SIZE    8    /*  */
-#define KICK_COEFFICIENT    0.65 /* 0.45 -> 0.65 */
+#define KICK_WINDOW_SIZE    10
+#define KICK_COEFFICIENT    1.5 /* 0.45 -> 0.65 */
 #define KICK_TH_WINDOW_SIZE 70
-#define KICK_TH_COEFFICIENT 0.3 /* 0.3 */
+#define KICK_TH_COEFFICIENT 1.5 /* 0.3 */
+#define KICK_ABS_TH         24
 #define KICK_ALPHA    ((float)2 / (1 + KICK_WINDOW_SIZE))
 #define KICK_TH_ALPHA ((float)2 / (1 + KICK_TH_WINDOW_SIZE))
 
@@ -261,7 +262,8 @@ void matrix_scan_user (void) {
     for(t = 0, i = KICK_BAND_FROM; i <= KICK_BAND_TO; i++)
         t += abs[i];
     kick_average = t * KICK_TH_ALPHA + kick_average * (1 - KICK_TH_ALPHA);
-    t = max(0, (t - kick_average * KICK_TH_COEFFICIENT) * KICK_COEFFICIENT);
+    /* t = max(0, (t - kick_average * KICK_TH_COEFFICIENT) * KICK_COEFFICIENT); */
+    t = t > kick_average * KICK_TH_COEFFICIENT && t > KICK_ABS_TH ? t * KICK_COEFFICIENT : 0;
     kick = t * KICK_ALPHA + kick * (1 - KICK_ALPHA);
 
     /* blue_led */
@@ -283,15 +285,14 @@ void matrix_scan_user (void) {
     green = t * RGB_ALPHA + green * (1 - RGB_ALPHA);
 
     if (power) {
-        /* rgblight_setrgb(0, 0, 0); */
         rgblight_setrgb_at(min(kick, 255), min(kick, 255), min(kick, 255), 0);
+        rgblight_setrgb_at(min(kick, 255), min(kick, 255), min(kick, 255), 4);
         /* rgblight_setrgb_at(0, 0, min(blue, 255), 1); */
         /* rgblight_setrgb_at(min(red, 255), 0, 0, 2); */
         /* rgblight_setrgb_at(0, min(green, 255), 0, 3); */
         rgblight_setrgb_at(min(red, 255), min(green, 255), min(blue, 255), 1);
         rgblight_setrgb_at(min(red, 255), min(green, 255), min(blue, 255), 2);
         rgblight_setrgb_at(min(red, 255), min(green, 255), min(blue, 255), 3);
-        rgblight_setrgb_at(min(kick, 255), min(kick, 255), min(kick, 255), 4);
     } else {
         rgblight_setrgb(0, 0, 0);
         rgblight_setrgb_at(0, 255, 0, 0);
