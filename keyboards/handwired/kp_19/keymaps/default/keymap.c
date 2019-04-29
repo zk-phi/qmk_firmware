@@ -198,14 +198,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
         switch (keycode) {
           case KC_AMPUP:
-            if (amp < 9.5) amp += 0.5;
-            register_code(KC_U);
-            unregister_code(KC_U);
+            if (amp < 10) amp += 0.5;
             return false;
           case KC_AMPDOWN:
-            if (amp > 0.5) amp -= 0.5;
-            register_code(KC_D);
-            unregister_code(KC_D);
+            if (amp > 0) amp -= 0.5;
             return false;
         }
     }
