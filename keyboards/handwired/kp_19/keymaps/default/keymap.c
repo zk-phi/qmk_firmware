@@ -207,30 +207,6 @@ void matrix_scan_user (void)
         rgblight_setrgb_at(0, 255, 0, 3);
         rgblight_setrgb_at(0, 255, 0, 4);
     }
-
-    /* if (kick > 255) { */
-    /*     register_code(KC_X); */
-    /*     unregister_code(KC_X); */
-    /* } */
-    /*  */
-    /* switch((int)min(kick, 255) / 16) { */
-    /*   case 0: register_code(KC_0); unregister_code(KC_0); break; */
-    /*   case 1: register_code(KC_1); unregister_code(KC_1); break; */
-    /*   case 2: register_code(KC_2); unregister_code(KC_2); break; */
-    /*   case 3: register_code(KC_3); unregister_code(KC_3); break; */
-    /*   case 4: register_code(KC_4); unregister_code(KC_4); break; */
-    /*   case 5: register_code(KC_5); unregister_code(KC_5); break; */
-    /*   case 6: register_code(KC_6); unregister_code(KC_6); break; */
-    /*   case 7: register_code(KC_7); unregister_code(KC_7); break; */
-    /*   case 8: register_code(KC_8); unregister_code(KC_8); break; */
-    /*   case 9: register_code(KC_9); unregister_code(KC_9); break; */
-    /*   case 10: register_code(KC_A); unregister_code(KC_A); break; */
-    /*   case 11: register_code(KC_B); unregister_code(KC_B); break; */
-    /*   case 12: register_code(KC_C); unregister_code(KC_C); break; */
-    /*   case 13: register_code(KC_D); unregister_code(KC_D); break; */
-    /*   case 14: register_code(KC_E); unregister_code(KC_E); break; */
-    /*   case 15: register_code(KC_F); unregister_code(KC_F); break; */
-    /* } */
 }
 
 void matrix_init_user (void) {
