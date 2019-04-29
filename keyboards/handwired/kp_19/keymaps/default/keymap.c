@@ -32,12 +32,6 @@ enum custom_keycodes {
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    /* [DEFAULT] = LAYOUT( */
-    /*     LT(VOLUP, KC_MEDIA_REWIND), */
-    /*     LT(VOLDN, KC_MEDIA_FAST_FORWARD), */
-    /*     LT(AMPUP, KC_MEDIA_PLAY_PAUSE), */
-    /*     LT(AMPDN, KC_MEDIA_PLAY_PAUSE) */
-    /* ), */
     [DEFAULT] = LAYOUT(
         LT(VOLUP, KC_MEDIA_REWIND),
         LT(VOLDN, KC_MEDIA_FAST_FORWARD),
