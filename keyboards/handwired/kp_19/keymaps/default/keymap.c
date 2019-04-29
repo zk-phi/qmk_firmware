@@ -17,18 +17,22 @@
 
 #include "fft.c"
 #include "analog.h"
+#include "matrix.h"
 
 enum layers {
     DEFAULT,
     VOLUP,
     VOLDN,
     AMPUP,
-    AMPDN
+    AMPDN,
+    VIB
 };
 
 enum custom_keycodes {
     KC_AMPUP = SAFE_RANGE,
     KC_AMPDOWN,
+    KC_VIBUP,
+    KC_VIBDOWN
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -39,16 +43,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         LT(AMPDN, KC_MEDIA_PLAY_PAUSE)
     ),
     [VOLUP] = LAYOUT(
-        _______, KC__VOLUP, _______, _______
+        _______, LT(VIB, KC__VOLUP), _______, _______
     ),
     [VOLDN] = LAYOUT(
-        KC__VOLDOWN, _______, _______, _______
+        LT(VIB, KC__VOLDOWN), _______, _______, _______
     ),
     [AMPUP] = LAYOUT(
         _______, _______, _______, KC_AMPUP
     ),
     [AMPDN] = LAYOUT(
         _______, _______, KC_AMPDOWN, _______
+    ),
+    [VIB] = LAYOUT(
+        _______, _______, KC_VIBDOWN, KC_VIBUP
     )
 };
 
@@ -89,8 +96,42 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define max(A, B) ((A) > (B) ? (A) : (B))
 
 float amp = 1.0;
+int vib_duration = 25;
 
-void matrix_scan_user (void) {
+void matrix_scan_user (void)
+{
+    /* ---- HAPTIC */
+
+    static int vib_clear_timer = 0;
+    static matrix_row_t matrix_prev[MATRIX_ROWS];
+    matrix_row_t matrix_row = 0;
+    matrix_row_t matrix_change = 0;
+
+    if (vib_clear_timer) {
+        if ((int)(vib_duration - timer_elapsed(vib_clear_timer)) < 0) {
+            backlight_level(0);
+            vib_clear_timer = 0;
+        }
+    }
+
+    for (uint8_t r = 0; r < MATRIX_ROWS; r++) {
+        matrix_row = matrix_get_row(r);
+        matrix_change = matrix_row ^ matrix_prev[r];
+        if (matrix_change) {
+            for (uint8_t c = 0; c < MATRIX_COLS; c++) {
+                if (matrix_change & ((matrix_row_t)1<<c)) {
+                    if (matrix_row & ((matrix_row_t)1<<c)) {
+                        backlight_level(16);
+                        vib_clear_timer = timer_read();
+                    }
+                    matrix_prev[r] ^= ((matrix_row_t)1<<c);
+                }
+            }
+        }
+    }
+
+    /* ---- AUDIO-SYNC LED */
+
     static bool power = false;
     static uint8_t power_count;
     static float kick, kick_average, red, green, blue;
@@ -167,8 +208,6 @@ void matrix_scan_user (void) {
         rgblight_setrgb_at(0, 255, 0, 4);
     }
 
-    backlight_level(min(kick / 16, 16));
-
     /* if (kick > 255) { */
     /*     register_code(KC_X); */
     /*     unregister_code(KC_X); */
@@ -194,6 +233,10 @@ void matrix_scan_user (void) {
     /* } */
 }
 
+void matrix_init_user (void) {
+    backlight_level(0);
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
         switch (keycode) {
@@ -202,6 +245,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
           case KC_AMPDOWN:
             if (amp > 0) amp -= 0.5;
+            return false;
+          case KC_VIBUP:
+            vib_duration += 5;
+            return false;
+          case KC_VIBDOWN:
+            if (vib_duration > 0) vib_duration -= 5;
             return false;
         }
     }
