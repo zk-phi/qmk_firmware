@@ -96,7 +96,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define max(A, B) ((A) > (B) ? (A) : (B))
 
 float amp = 1.0;
-int vib_duration = 25;
+int vib_duration = 40;
 
 void matrix_scan_user (void)
 {
