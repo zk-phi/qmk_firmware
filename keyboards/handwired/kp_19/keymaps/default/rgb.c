@@ -35,7 +35,7 @@
 #define min(A, B) ((A) < (B) ? (A) : (B))
 #define max(A, B) ((A) > (B) ? (A) : (B))
 
-float amp = 1.0;
+float rgb_amp = 1.0;
 
 LED_TYPE led[RGBLED_NUM];
 
@@ -52,7 +52,7 @@ void rgb_task (void) {
     /* collect 128 samples (-128~+128 each) */
     for(i = maximum = 0; i < 128; i++)
     {
-        t = (analogRead(AUDIO_INPUT) - 512) * amp;
+        t = (analogRead(AUDIO_INPUT) - 512) * rgb_amp;
         maximum = max(t, maximum);
         re[i] = (int8_t)t, im[i] = 0;
     }
