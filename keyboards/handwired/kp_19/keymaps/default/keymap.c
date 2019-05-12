@@ -121,7 +121,7 @@ void matrix_scan_user (void)
             for (uint8_t c = 0; c < MATRIX_COLS; c++) {
                 if (matrix_change & ((matrix_row_t)1<<c)) {
                     if (matrix_row & ((matrix_row_t)1<<c)) {
-                        backlight_level(16);
+                        backlight_level(15);
                         vib_clear_timer = timer_read();
                     }
                     matrix_prev[r] ^= ((matrix_row_t)1<<c);
