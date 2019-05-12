@@ -98,6 +98,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 float amp = 1.0;
 int vib_duration = 40;
 
+LED_TYPE led[RGBLED_NUM];
+
 void matrix_scan_user (void)
 {
     /* ---- HAPTIC */
@@ -191,21 +193,33 @@ void matrix_scan_user (void)
     green = t * RGB_ALPHA + green * (1 - RGB_ALPHA);
 
     if (power) {
-        rgblight_setrgb_at(min(kick, 255), min(kick, 255), min(kick, 255), 0);
-        rgblight_setrgb_at(min(kick, 255), min(kick, 255), min(kick, 255), 4);
-        /* rgblight_setrgb_at(0, 0, min(blue, 255), 1); */
-        /* rgblight_setrgb_at(min(red, 255), 0, 0, 2); */
-        /* rgblight_setrgb_at(0, min(green, 255), 0, 3); */
-        rgblight_setrgb_at(min(red, 255), min(green, 255), min(blue, 255), 1);
-        rgblight_setrgb_at(min(red, 255), min(green, 255), min(blue, 255), 2);
-        rgblight_setrgb_at(min(red, 255), min(green, 255), min(blue, 255), 3);
+        /* backlight */
+        setrgb(min(red, 255), min(green, 255), min(blue, 255), &led[0]);
+        setrgb(min(red, 255), min(green, 255), min(blue, 255), &led[1]);
+        setrgb(min(red, 255), min(green, 255), min(blue, 255), &led[2]);
+        setrgb(min(red, 255), min(green, 255), min(blue, 255), &led[3]);
+        /* underglow */
+        setrgb(min(kick, 255), min(kick, 255), min(kick, 255), &led[4]);
+        setrgb(0, 0, min(blue, 255), &led[5]);
+        setrgb(min(red, 255), 0, 0, &led[6]);
+        setrgb(0, min(green, 255), 0, &led[7]);
+        setrgb(min(kick, 255), min(kick, 255), min(kick, 255), &led[8]);
+        /* sideview (left) */
+        setrgb(min(kick, 255), min(kick, 255), min(kick, 255), &led[9]);
+        setrgb(min(kick, 255), min(kick, 255), min(kick, 255), &led[10]);
+        setrgb(min(kick, 255), min(kick, 255), min(kick, 255), &led[11]);
+        setrgb(min(kick, 255), min(kick, 255), min(kick, 255), &led[12]);
+        setrgb(min(kick, 255), min(kick, 255), min(kick, 255), &led[13]);
+        /* sideview (right) */
+        setrgb(min(kick, 255), min(kick, 255), min(kick, 255), &led[14]);
+        setrgb(min(kick, 255), min(kick, 255), min(kick, 255), &led[15]);
+        setrgb(min(kick, 255), min(kick, 255), min(kick, 255), &led[16]);
+        setrgb(min(kick, 255), min(kick, 255), min(kick, 255), &led[17]);
+        setrgb(min(kick, 255), min(kick, 255), min(kick, 255), &led[18]);
+        /*  */
+        ws2812_setleds(led, RGBLED_NUM);
     } else {
-        rgblight_setrgb(0, 0, 0);
-        rgblight_setrgb_at(0, 255, 0, 0);
-        rgblight_setrgb_at(0, 255, 0, 1);
-        rgblight_setrgb_at(0, 255, 0, 2);
-        rgblight_setrgb_at(0, 255, 0, 3);
-        rgblight_setrgb_at(0, 255, 0, 4);
+        rgblight_setrgb(64, 64, 64);
     }
 }
 
