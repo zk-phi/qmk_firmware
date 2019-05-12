@@ -35,11 +35,11 @@
 #define min(A, B) ((A) < (B) ? (A) : (B))
 #define max(A, B) ((A) > (B) ? (A) : (B))
 
-float rgb_amp = 1.0;
+float lightshow_amp = 1.0;
 
 LED_TYPE led[RGBLED_NUM];
 
-void rgb_task (void) {
+void lightshow_task (void) {
     static bool power = false;
     static uint8_t power_count;
     static float kick, kick_average, red, green, blue;
@@ -52,7 +52,7 @@ void rgb_task (void) {
     /* collect 128 samples (-128~+128 each) */
     for(i = maximum = 0; i < 128; i++)
     {
-        t = (analogRead(AUDIO_INPUT) - 512) * rgb_amp;
+        t = (analogRead(AUDIO_INPUT) - 512) * lightshow_amp;
         maximum = max(t, maximum);
         re[i] = (int8_t)t, im[i] = 0;
     }
@@ -125,6 +125,6 @@ void rgb_task (void) {
         /*  */
         ws2812_setleds(led, RGBLED_NUM);
     } else {
-        rgblight_setrgb(64, 64, 64);
+        rgblight_setrgb(32, 32, 32);
     }
 }

@@ -16,7 +16,7 @@
 #include QMK_KEYBOARD_H
 
 #include "haptic.c"
-#include "rgb.c"
+#include "lightshow.c"
 
 enum layers {
     DEFAULT,
@@ -60,7 +60,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 void matrix_scan_user (void) {
     haptic_task();
-    rgb_task();
+    lightshow_task();
 }
 
 void matrix_init_user (void) {
@@ -71,10 +71,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
         switch (keycode) {
           case KC_AMPUP:
-            if (rgb_amp < 10) rgb_amp += 0.5;
+            if (lightshow_amp < 10) lightshow_amp += 0.5;
             return false;
           case KC_AMPDOWN:
-            if (rgb_amp > 0) rgb_amp -= 0.5;
+            if (lightshow_amp > 0) lightshow_amp -= 0.5;
             return false;
           case KC_VIBUP:
             vib_duration += 5;
