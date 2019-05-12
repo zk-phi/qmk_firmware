@@ -100,10 +100,7 @@ int vib_duration = 40;
 
 LED_TYPE led[RGBLED_NUM];
 
-void matrix_scan_user (void)
-{
-    /* ---- HAPTIC */
-
+void haptic_task (void) {
     static int vib_clear_timer = 0;
     static matrix_row_t matrix_prev[MATRIX_ROWS];
     matrix_row_t matrix_row = 0;
@@ -131,9 +128,13 @@ void matrix_scan_user (void)
             }
         }
     }
+}
 
-    /* ---- AUDIO-SYNC LED */
+void haptic_init (void) {
+    backlight_level(0);
+}
 
+void audio_illumination_task (void) {
     static bool power = false;
     static uint8_t power_count;
     static float kick, kick_average, red, green, blue;
@@ -223,8 +224,13 @@ void matrix_scan_user (void)
     }
 }
 
+void matrix_scan_user (void) {
+    haptic_task();
+    audio_illumination_task();
+}
+
 void matrix_init_user (void) {
-    backlight_level(0);
+    haptic_init();
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
