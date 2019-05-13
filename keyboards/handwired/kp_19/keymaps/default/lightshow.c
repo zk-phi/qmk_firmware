@@ -125,6 +125,6 @@ void lightshow_task (void) {
         /*  */
         ws2812_setleds(led, RGBLED_NUM);
     } else {
-        rgblight_setrgb(32, 32, 32);
+        rgblight_setrgb(0, 255, 0);
     }
 }
