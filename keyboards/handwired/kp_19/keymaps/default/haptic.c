@@ -1,6 +1,6 @@
 #include "matrix.h"
 
-int vib_duration = 50;
+int vib_duration = 55;
 
 void haptic_task (void) {
     static int vib_clear_timer = 0;
