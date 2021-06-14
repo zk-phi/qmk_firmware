@@ -6,6 +6,10 @@
 
 #define LAYER_ON(n) (layer_state & (2 << ((n) - 1)))
 
+enum custom_keycode {
+    KC_MEET = SAFE_RANGE,
+};
+
 enum layer_numbers {
     BASE = 0,
     RAISE,
@@ -62,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //|------+------+------+------+------+------+------+------+------+------+------+------|
         LSFT , Z    , X    , C    , V    , B    , N    , M    , COMM , DOT  , SLSH , \
 //    `------+------+------+------+------+------+------+------+------+------+------'
-                         DSCO ,ES_ALT, SPC  ,EN_RAI, FUNC , ____   \
+                         DSCO ,ES_ALT, SPC  ,EN_RAI, FUNC , MEET   \
 //                     `------+------+------+------+------+------'
 ),
 
@@ -127,6 +131,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 };
+
+bool process_record_keymap (uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+      case KC_MEET:
+        tap_code16(LALT(KC_D));
+        return false;
+    }
+    return true;
+}
 
 void keyboard_post_init_user () {
     /* rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE); */
