@@ -21,6 +21,7 @@
 #pragma message "Dynamic Macros is now a core feature. See updated documentation to see how to configure it: https://docs.qmk.fm/#/feature_dynamic_macros"
 
 #include "action_layer.h"
+#include "pro_micro.h"
 
 #ifndef DYNAMIC_MACRO_SIZE
 /* May be overridden with a custom value. Be aware that the effective
@@ -61,6 +62,7 @@ void dynamic_macro_record_start(keyrecord_t **macro_pointer, keyrecord_t *macro_
     dprintln("dynamic macro recording: started");
 
     dynamic_macro_led_blink();
+    RXLED1;
 
     clear_keyboard();
     layer_clear();
@@ -127,6 +129,7 @@ void dynamic_macro_record_key(keyrecord_t *macro_buffer, keyrecord_t **macro_poi
  */
 void dynamic_macro_record_end(keyrecord_t *macro_buffer, keyrecord_t *macro_pointer, int8_t direction, keyrecord_t **macro_end) {
     dynamic_macro_led_blink();
+    RXLED0;
 
     /* Do not save the keys being held when stopping the recording,
      * i.e. the keys used to access the layer DYN_REC_STOP is on.
